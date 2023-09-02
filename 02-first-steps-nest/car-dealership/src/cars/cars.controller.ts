@@ -4,11 +4,12 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
-  Post,
+  Post
 } from '@nestjs/common';
 import { Car, CarsService } from './cars.service';
+import { CreateCarDto } from './dto/create-car.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -19,23 +20,22 @@ export class CarsController {
   }
 
   @Get(':id')
-  getCarById(@Param('id', ParseIntPipe) id: number): Car {
+  getCarById(@Param('id', ParseUUIDPipe) id: string): Car {
     if (!Number(id)) throw new Error('id must be a number');
     return this.carsService.getCarById(id);
   }
 
   @Post()
-  createCar(@Body() car: Car) {
-    if (!car.id) throw new Error('car must have an id');
-    this.carsService.createCar(car);
+  createCar(@Body() createCarDto: CreateCarDto) {
+    this.carsService.createCar(createCarDto);
     return {
       message: 'car created',
-      car,
+      createCarDto,
     };
   }
 
   @Patch(':id')
-  updateCar(@Param('id', ParseIntPipe) id: number, @Body() car: Car) {
+  updateCar(@Param('id', ParseUUIDPipe) id: string, @Body() car: Car) {
     if (!Number(id)) throw new Error('id must be a number');
     this.carsService.updateCar(id, car);
     return {
@@ -45,7 +45,7 @@ export class CarsController {
   }
 
   @Delete(':id')
-  deleteCar(@Param('id', ParseIntPipe) id: number) {
+  deleteCar(@Param('id', ParseUUIDPipe) id: string) {
     if (!Number(id)) throw new Error('id must be a number');
     this.carsService.deleteCar(id);
     return {

@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { v4 as uuid } from 'uuid';
+import { CreateCarDto } from './dto/create-car.dto';
 
 export interface Car {
-  id: number;
+  id: string;
   brand: string;
   color: string;
   model: string;
@@ -10,23 +12,23 @@ export interface Car {
 
 @Injectable()
 export class CarsService {
-  private cars: Car[] = [
+  private cars: CreateCarDto[] = [
     {
-      id: 1,
+      id: uuid(),
       brand: 'Audi',
       color: 'black',
       model: 'A4',
       price: 20000,
     },
     {
-      id: 2,
+      id: uuid(),
       brand: 'BMW',
       color: 'white',
       model: 'X5',
       price: 25000,
     },
     {
-      id: 3,
+      id: uuid(),
       brand: 'Lada',
       color: 'red',
       model: 'Vesta',
@@ -38,7 +40,7 @@ export class CarsService {
     return this.cars;
   }
 
-  getCarById(id: number): Car {
+  getCarById(id: string): Car {
     const car = this.cars.find((car) => car.id === id);
 
     if (!car) throw new NotFoundException('Car not found');
@@ -46,14 +48,12 @@ export class CarsService {
     return car;
   }
 
-  createCar(car: Car) {
-    if (!car) throw new Error('car format incorrect');
-    const auxCar = this.cars.find((c) => c.id === car.id);
-    if (auxCar) throw new Error('car already exists');
-    this.cars.push(car);
+  createCar(createCarDto: CreateCarDto) {
+    if (!createCarDto) throw new Error('car format incorrect');
+    this.cars.push(createCarDto);
   }
 
-  updateCar(id: number, car: Car) {
+  updateCar(id: string, car: Car) {
     if (!car) throw new Error('car format incorrect');
     const auxCar = this.getCarById(id);
     if (!auxCar) throw new Error('car not found');
@@ -68,7 +68,7 @@ export class CarsService {
     });
   }
 
-  deleteCar(id: number) {
+  deleteCar(id: string) {
     const auxCar = this.getCarById(id);
     if (!auxCar) throw new Error('car not found');
     this.cars = this.cars.filter((c) => c.id !== id);
