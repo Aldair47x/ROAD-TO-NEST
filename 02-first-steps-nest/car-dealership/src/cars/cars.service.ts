@@ -12,7 +12,7 @@ export interface Car {
 
 @Injectable()
 export class CarsService {
-  private cars: CreateCarDto[] = [
+  private cars: Car[] = [
     {
       id: uuid(),
       brand: 'Audi',
@@ -50,7 +50,13 @@ export class CarsService {
 
   createCar(createCarDto: CreateCarDto) {
     if (!createCarDto) throw new Error('car format incorrect');
-    this.cars.push(createCarDto);
+    const newCar: Car = {
+      id: uuid(),
+      ...createCarDto
+    }
+    this.cars.push(newCar);
+    return newCar;
+    
   }
 
   updateCar(id: string, car: Car) {

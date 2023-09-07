@@ -21,22 +21,22 @@ export class CarsController {
 
   @Get(':id')
   getCarById(@Param('id', ParseUUIDPipe) id: string): Car {
-    if (!Number(id)) throw new Error('id must be a number');
+    if(!id) throw new Error('id must be exist');
     return this.carsService.getCarById(id);
   }
 
   @Post()
   createCar(@Body() createCarDto: CreateCarDto) {
-    this.carsService.createCar(createCarDto);
+    const newCar: Car = this.carsService.createCar(createCarDto);
     return {
       message: 'car created',
-      createCarDto,
+      newCar,
     };
   }
 
   @Patch(':id')
   updateCar(@Param('id', ParseUUIDPipe) id: string, @Body() car: Car) {
-    if (!Number(id)) throw new Error('id must be a number');
+    if(!id) throw new Error('id must be exist');
     this.carsService.updateCar(id, car);
     return {
       message: 'car updated',
@@ -46,7 +46,7 @@ export class CarsController {
 
   @Delete(':id')
   deleteCar(@Param('id', ParseUUIDPipe) id: string) {
-    if (!Number(id)) throw new Error('id must be a number');
+    if(!id) throw new Error('id must be exist');
     this.carsService.deleteCar(id);
     return {
       message: 'car deleted',
