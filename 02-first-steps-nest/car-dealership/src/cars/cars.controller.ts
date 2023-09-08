@@ -37,10 +37,10 @@ export class CarsController {
   @Patch(':id')
   updateCar(@Param('id', ParseUUIDPipe) id: string, @Body() car: Car) {
     if(!id) throw new Error('id must be exist');
-    this.carsService.updateCar(id, car);
+    const newCar = this.carsService.updateCar(id, car);
     return {
       message: 'car updated',
-      car,
+      newCar,
     };
   }
 
