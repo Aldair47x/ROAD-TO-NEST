@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
-@Controller("v2/pokemon")
+@Controller("pokemon")
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
@@ -14,8 +15,8 @@ export class PokemonController {
   }
 
   @Get()
-  findAll() {
-    return this.pokemonService.findAll();
+  findAll( @Query() queryParameters: PaginationDto ) {
+    return this.pokemonService.findAll(queryParameters);
   }
 
   @Get(":term")
